@@ -3,32 +3,29 @@
 version: 2.1
 
 # Orchestrate or schedule a set of jobs
-jobs:
-  print_hello:
+ jobs:
+  save_hello_world_output:
     docker:
-        - image: cimg/base:stable
+      - image: cimg/base:stable
     steps:
-        - run: echo hello
-  print_world:
+      - run: echo "hello world" > ~/output.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - output.txt
+
+  print_output_file:
     docker:
-        - image: cimg/base:stable
+      - image: cimg/base:stable
     steps:
-        - run: echo world
-  print_env_var:
-    docker:
-        - image: cimg/base:stable
-    steps:
-        - run:
-            name: "echo and environment variable"
-            command: |
-                echo $MY_ENV_VAR
+      - attach_workspace:
+          at: ~/
+      - run: cat ~/output.txt
+
 workflows:
-  # Name the workflow "welcome"
-  welcome:
-    # Run the welcome/run job in its own container
+  my_workflow:
     jobs:
-      - print_hello
-      - print_world:
+      - save_hello_world_output
+      - print_output_file:
           requires:
-            - print_hello
-      - print_env_var
+            - save_hello_world_output

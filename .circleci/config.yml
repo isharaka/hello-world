@@ -3,7 +3,7 @@
 version: 2.1
 
 # Orchestrate or schedule a set of jobs
- jobs:
+jobs:
   save_hello_world_output:
     docker:
       - image: cimg/base:stable
@@ -14,7 +14,7 @@ version: 2.1
           paths:
             - output.txt
 
-  print_output_file:
+print_output_file:
     docker:
       - image: cimg/base:stable
     steps:
